@@ -4,6 +4,11 @@ Problem Link :
 https://www.hackerrank.com/contests/icode-2015-week-one/challenges/minimum-scalar-product
 */
 
+/*
+Appeared in:
+Google Code Jam
+*/
+
 #include<bits/stdc++.h>
 using namespace std;
 

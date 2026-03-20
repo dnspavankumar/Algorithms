@@ -13,18 +13,18 @@ Budget : The constraint is that is stopping you from spending extra parts which 
          You are not supposed to split more than k parts therefore k acts as the budget
 Optimand : what are u optimizing upon (finding min or max) => We are optimizing upon the sum
            We are trying to put the sum <= optimand to see if that sum is available or not
-
+Exhausting element: when the sum of sequence exceeds optimand it gets exhausted and requires reset
 */
 bool greedy(vector<int>& seq,int optimand,int budget) {
   int expense = 1;
-  int sum = 0;
+  int exhaustingElement = 0; // sum
   for(auto& x : seq) {
-    if(sum + x <= optimand) {
-      sum += x;
+    if(exhaustingElement + x <= optimand) {
+      exhaustingElement += x;
     }
     else{
       expense++;
-      sum = x;
+      exhaustingElement = x;
     }
   }
   return expense <= budget;
