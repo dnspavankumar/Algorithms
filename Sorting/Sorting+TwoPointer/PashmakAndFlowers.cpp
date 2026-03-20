@@ -41,7 +41,7 @@ void MaxDifference(vector<int>& a) {
     int minVal = a[0];
     int maxVal = a[n - 1];
 
-    // Corrected loop logic: compare array values, not indices
+    
     while (left < n && a[left] == minVal) {
         minimumCount++;
         left++;
