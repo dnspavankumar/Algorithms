@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 #define int long long
@@ -7,73 +7,79 @@ using namespace std;
 vector<int> p;
 string t;
 
-// Manacher helper
-vector<int> manacherHelper(string s) {
-    int n = s.size();
-    vector<int> p(n, 1);
-    int left = 1, right = 1;
-
-    for(int i = 1; i < n; i++){
-        p[i] = max(0LL, min(right - i, p[left + right - i]));
-
-        while(i + p[i] < n && i - p[i] >= 0 && s[i + p[i]] == s[i - p[i]])
-            p[i]++;
-
-        if(i + p[i] > right){
-            left = i - p[i];
-            right = i + p[i];
-        }
-    }
-    return p;
-}
-
-// Build transformed string
-string build(string s) {
+// Build transformed string: "#a#b#c#"
+string build(const string &s) {
     string t = "#";
-    for(char c : s) {
+    for (char c : s) {
         t += c;
         t += "#";
     }
     return t;
 }
 
+// Manacher algorithm
+vector<int> manacherHelper(const string &s) {
+    int n = s.size();
+    vector<int> p(n, 0);
+
+    int center = 0, right = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (i < right)
+            p[i] = min(right - i, p[2 * center - i]);
+
+        // expand around center i
+        while (i - p[i] - 1 >= 0 && i + p[i] + 1 < n &&
+               s[i - p[i] - 1] == s[i + p[i] + 1]) {
+            p[i]++;
+        }
+
+        // update center and right boundary
+        if (i + p[i] > right) {
+            center = i;
+            right = i + p[i];
+        }
+    }
+    return p;
+}
+
 // Preprocess
-void preprocess(string s){
+void preprocess(const string &s) {
     t = build(s);
     p = manacherHelper(t);
 }
 
-// check if s[l...r] is palindrome
-bool isPalindrome(int l, int r){
+// Check if s[l...r] is palindrome (0-based)
+bool isPalindrome(int l, int r) {
     int len = r - l + 1;
 
-    // map to transformed string center
-    int center = l + r;
+    // correct mapping to transformed string
+    int center = l + r + 1;
 
-    return p[center] > len;
+    return p[center] >= len;
 }
 
-// longest palindrome length
-int longestPalindromeLength(string s){
+// Longest palindrome length
+int longestPalindromeLength() {
     int ans = 0;
-    for(int i = 0; i < p.size(); i++){
-        ans = max(ans, p[i] - 1);
+    for (int i = 0; i < (int)p.size(); i++) {
+        ans = max(ans, p[i]);
     }
     return ans;
 }
 
-// longest palindrome substring
-string longestPalindrome(string s){
+// Longest palindrome substring
+string longestPalindrome(const string &s) {
     int maxLen = 0, center = 0;
 
-    for(int i = 0; i < p.size(); i++){
-        if(p[i] - 1 > maxLen){
-            maxLen = p[i] - 1;
+    for (int i = 0; i < (int)p.size(); i++) {
+        if (p[i] > maxLen) {
+            maxLen = p[i];
             center = i;
         }
     }
 
-    int start = (center - p[center] + 1) / 2;
+    int start = (center - maxLen) / 2;
     return s.substr(start, maxLen);
 }
 
@@ -86,17 +92,17 @@ signed main() {
 
     preprocess(s);
 
-    cout << "Longest Length: " << longestPalindromeLength(s) << endl;
+    cout << "Longest Length: " << longestPalindromeLength() << endl;
     cout << "Longest Substring: " << longestPalindrome(s) << endl;
 
     int q;
     cin >> q;
 
-    while(q--){
+    while (q--) {
         int l, r;
-        cin >> l >> r; // 0-based indexing
+        cin >> l >> r; // 0-based
 
-        if(isPalindrome(l, r)) cout << "YES\n";
+        if (isPalindrome(l, r)) cout << "YES\n";
         else cout << "NO\n";
     }
 
