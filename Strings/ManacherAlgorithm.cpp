@@ -29,12 +29,12 @@ vector<int> manacherHelper(string s) {
 
 // Build transformed string
 string build(string s) {
-    string ans = "";
+    string t = "#";
     for(char c : s) {
-        ans += c;
-        ans += '#';
+        t += c;
+        t += "#";
     }
-    return ans + '#';
+    return t;
 }
 
 // Preprocess
